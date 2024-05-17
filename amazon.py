@@ -4,11 +4,16 @@ from . import APP_DIR, load_yaml_config
 from .browser import Browser
 from .alert import Pushover
 
+config = load_yaml_config(APP_DIR / 'config.yml')
+
+if 'amazon' not in config:
+    raise RuntimeError('Amazon configuration missing')
+
 # CONSTANTS
 
 APP_URL = (
     'https://hiring.amazon.com/app#/jobSearch?query='
-    '&postal=30214'
+    f'&postal={config['amazon']['zip']}'
     '&locale=en-US'
 )
 
@@ -43,7 +48,6 @@ RE_LOCATION = re.compile((
 
 # GLOBAL VARIABLES
 
-config = load_yaml_config(APP_DIR / 'config.yml')
 jobs = []
 JobItem = namedtuple('JobItem', ['miles', 'city', 'state'])
 
@@ -69,9 +73,9 @@ with Browser() as wb:
                 match.group('state')
             )
 
-            if job.miles <= 30:
+            if job.miles < config['amazon'].get('distance', 0):
                 jobs.append(job)
-            elif job.city == 'Newnan' or job.city == 'Moreland':
+            elif job.city in config['amazon'].get('cities', []):
                 jobs.append(job)
 
     if not jobs:
