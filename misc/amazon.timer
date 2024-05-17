@@ -3,7 +3,7 @@ Description=Amazon Jobs Search
 
 [Timer]
 OnCalendar=*:0/10
-Persistent=true
+Persistent=false
 
 [Install]
 WantedBy=timers.target
