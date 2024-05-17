@@ -2,7 +2,7 @@
 Description=Amazon Jobs Search
 
 [Timer]
-OnCalendar=*:0/10
+OnCalendar=*:0/15
 Persistent=false
 
 [Install]
