@@ -1,11 +1,12 @@
+import yaml
 import pathlib
 import platform
+
+# CONSTANTS
 
 APP_DIR = pathlib.Path(__file__).resolve().parent
 BIN_DIR = APP_DIR / 'bin'
 APP_BIN = None
-
-# DETERMINE 
 
 match platform.machine().lower():
     case 'amd64':
@@ -22,3 +23,10 @@ match platform.system().lower():
         APP_BIN = BIN_DIR / 'linux' / 'geckodriver'
     case _:
         raise OSError('Unsupported operating system')
+
+# FUNCTIONS
+
+def load_yaml_config(fp):
+    with open(fp, 'r') as f:
+        config = yaml.safe_load(f)
+    return config

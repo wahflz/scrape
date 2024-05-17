@@ -1,12 +1,6 @@
-import yaml
 import urllib
 import http.client
 from . import APP_DIR
-
-def load_yaml_config(fp): # move to __init__.py
-    with open(fp, 'r') as f:
-        config = yaml.safe_load(f)
-    return config
 
 class Pushover:
     PUSHOVER_API_URL = 'api.pushover.net:443'
@@ -36,6 +30,8 @@ class Pushover:
         self.cnx.getresponse() # check and raise error, etc. etc.
 
 if __name__ == '__main__':
+    from . import load_yaml_config
+
     config = load_yaml_config(APP_DIR / 'config.yml')
     
     with Pushover(config['pushover']['api_key'], config['pushover']['user_key']) as p:
