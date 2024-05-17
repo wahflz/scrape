@@ -90,9 +90,9 @@ with Browser() as wb:
     if not jobs:
         exit()
     
-    message = 'The following Amazon jobs are available:\n'
+    message = ''
     for job in jobs:
-        message += f"{job.miles} mi | {job.city}, {job.state}\n"
+        message += f"✅ {job.city}, {job.state} ({job.miles} mi)\n"
 
     with Pushover(config['pushover']['api_key'], config['pushover']['user_key']) as p:
         p.message(message)
