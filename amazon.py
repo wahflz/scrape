@@ -4,10 +4,18 @@ from . import APP_DIR, load_yaml_config
 from .browser import Browser
 from .alert import Pushover
 
+# LOAD CONFIG
+
 config = load_yaml_config(APP_DIR / 'config.yml')
 
 if 'amazon' not in config:
     raise RuntimeError('Amazon configuration missing')
+
+if 'zip' not in config['amazon']:
+    raise RuntimeError('Amazon configuration requires zip code')
+
+if 'distance' not in config['amazon'] or 'cities' not in config['amazon']:
+    raise RuntimeError('Amazon configuration requires search criteria')
 
 # CONSTANTS
 
@@ -81,7 +89,7 @@ with Browser() as wb:
     if not jobs:
         exit()
     
-    message = 'The following Amazon jobs are available:\n\n'
+    message = 'The following Amazon jobs are available:\n'
     for job in jobs:
         message += f"{job.miles} mi | {job.city}, {job.state}\n"
 
