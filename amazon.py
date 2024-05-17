@@ -21,7 +21,7 @@ if 'distance' not in config['amazon'] or 'cities' not in config['amazon']:
 
 APP_URL = (
     'https://hiring.amazon.com/app#/jobSearch?query='
-    f'&postal={config['amazon']['zip']}'
+    f'&postal={config["amazon"]["zip"]}'
     '&locale=en-US'
 )
 
