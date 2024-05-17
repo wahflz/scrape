@@ -81,6 +81,7 @@ with Browser() as wb:
                 match.group('state')
             )
 
+            # Efficiency is not my middle name
             if job.miles < config['amazon'].get('distance', 0):
                 jobs.append(job)
             elif job.city in config['amazon'].get('cities', []):
