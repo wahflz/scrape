@@ -1,0 +1,11 @@
+[Unit]
+Description=Amazon Jobs Search
+
+[Service]
+Type=simple
+ExecStart=/srv/python/scrape/env/bin/python -m scrape.amazon
+WorkingDirectory=/srv/python
+Restart=always
+
+[Install]
+WantedBy=multi-user.target

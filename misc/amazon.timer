@@ -1,0 +1,9 @@
+[Unit]
+Description=Amazon Jobs Search
+
+[Timer]
+OnCalendar=*:0/10
+Persistent=true
+
+[Install]
+WantedBy=timers.target
