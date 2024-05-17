@@ -69,7 +69,7 @@ class Browser:
 
     def wait_until_stale(self, element: WebElement, timeout: int = 10, *, strict: bool = True):
         try:
-            WebDriverWait(self.browser, timeout).until(lambda x: EC.staleness_of(element)) 
+            WebDriverWait(self.browser, timeout).until(lambda x: EC.staleness_of(element)) # poop
         except TimeoutException:
             if strict:
                 raise

@@ -3,7 +3,7 @@ import urllib
 import http.client
 from . import APP_DIR
 
-def load_yaml_config(fp):
+def load_yaml_config(fp): # move to __init__.py
     with open(fp, 'r') as f:
         config = yaml.safe_load(f)
     return config
