@@ -1,8 +1,8 @@
 import re
 from collections import namedtuple
-from . import APP_DIR
+from . import APP_DIR, load_yaml_config
 from .browser import Browser
-from .alert import Pushover, load_yaml_config
+from .alert import Pushover
 
 # CONSTANTS
 
