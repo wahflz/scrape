@@ -10,6 +10,8 @@ APP_BIN = None
 match platform.machine().lower():
     case 'amd64':
         BIN_DIR = BIN_DIR / 'amd64'
+    case 'x86_64':
+        BIN_DIR = BIN_DIR / 'amd64'
     case _:
         raise OSError('Unsupported architecture')
     
