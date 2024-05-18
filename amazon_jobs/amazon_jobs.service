@@ -3,7 +3,7 @@ Description=Amazon Jobs Search
 
 [Service]
 Type=simple
-ExecStart=/srv/python/scrape/env/bin/python -m scrape.amazon
+ExecStart=/srv/python/scrape/env/bin/python -m scrape.amazon_jobs
 WorkingDirectory=/srv/python
 Restart=no
 
