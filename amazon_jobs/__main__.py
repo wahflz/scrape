@@ -56,20 +56,18 @@ with Browser() as wb:
                 match.group('state')
             )
 
-            # Cache stuff
-            if job in cache:
-                diff = now - cache[job]
+            if (
+                job.miles < CFG['amazon'].get('distance', 0) or
+                job.city in CFG['amazon'].get('cities', [])
+            ):
+                if job in cache:
+                    diff = now - cache[job]
 
-                if diff <= min_time:
-                    continue
-            else:
-                cache[job] = now
-
-            # Efficiency is not my middle name
-            if job.miles < CFG['amazon'].get('distance', 0):
-                jobs.append(job)
-            elif job.city in CFG['amazon'].get('cities', []):
-                jobs.append(job)
+                    if diff <= min_time:
+                        continue
+                else:
+                    jobs.append(job)
+                    cache[job] = now
 
     if not jobs:
         exit()
