@@ -1,8 +1,10 @@
 import re
 from collections import namedtuple
-from . import AMAZON_JOBS_CONFIG as CFG
+from datetime import datetime, timedelta
+from . import AMAZON_JOBS_CONFIG as CFG, AMAZON_JOBS_DIR as CWD
 from ..alert import Pushover
 from ..browser import Browser
+from ..data import pickle_dict_load, pickle_dict_dump
 
 # CONSTANTS
 
@@ -25,6 +27,12 @@ RE_LOCATION = re.compile((
 jobs = []
 JobItem = namedtuple('JobItem', ['miles', 'city', 'state'])
 
+# CACHE
+
+min_time = timedelta(days=1)
+cache_file = CWD / 'cache.pkl'
+cache = pickle_dict_load(cache_file)
+
 # DEW IT!
 
 with Browser() as wb:
@@ -41,11 +49,21 @@ with Browser() as wb:
         location = wb.find_child_by_xpath(item, './div/div/div[2]/*[last()]/strong')
 
         if match := RE_LOCATION.match(location.text):
+            now = datetime.now()
             job = JobItem(
                 float(match.group('miles')),
                 match.group('city'),
                 match.group('state')
             )
+
+            # Cache stuff
+            if job in cache:
+                diff = now - cache[job]
+
+                if diff <= min_time:
+                    continue
+            else:
+                cache[job] = now
 
             # Efficiency is not my middle name
             if job.miles < CFG['amazon'].get('distance', 0):
@@ -62,3 +80,5 @@ with Browser() as wb:
 
     with Pushover(CFG['pushover']['api_key'], CFG['pushover']['user_key']) as p:
         p.message(content)
+
+    pickle_dict_dump(cache, cache_file)
