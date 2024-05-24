@@ -65,9 +65,9 @@ with Browser() as wb:
 
                     if diff <= min_time:
                         continue
-                else:
-                    jobs.append(job)
-                    cache[job] = now
+
+                jobs.append(job)
+                cache[job] = now
 
     if not jobs:
         exit()
