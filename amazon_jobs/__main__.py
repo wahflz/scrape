@@ -9,8 +9,8 @@ from ..data import pickle_dict_load, pickle_dict_dump
 # CONSTANTS
 
 AMAZON_JOBS_URL = (
-    'https://hiring.amazon.com/app#/jobSearch?query='
-    f'&postal={CFG["amazon"]["zip"]}'
+    'https://hiring.amazon.com/app#/jobSearch?'
+    f'postal={CFG["amazon"]["zip"]}'
     '&locale=en-US'
 )
 
@@ -30,8 +30,6 @@ JobItem = namedtuple('JobItem', ['miles', 'city', 'state'])
 # CACHE
 
 min_time = timedelta(days=1)
-cache_file = CWD / 'cache.pkl'
-cache = pickle_dict_load(cache_file)
 
 # DEW IT!
 
@@ -60,14 +58,7 @@ with Browser() as wb:
                 job.miles < CFG['amazon'].get('distance', 0) or
                 job.city in CFG['amazon'].get('cities', [])
             ):
-                if job in cache:
-                    diff = now - cache[job]
-
-                    if diff <= min_time:
-                        continue
-
                 jobs.append(job)
-                cache[job] = now
 
     if not jobs:
         exit()
@@ -78,5 +69,3 @@ with Browser() as wb:
 
     with Pushover(CFG['pushover']['api_key'], CFG['pushover']['user_key']) as p:
         p.message(content)
-
-    pickle_dict_dump(cache, cache_file)
