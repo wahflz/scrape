@@ -1,10 +1,9 @@
 import re
 from collections import namedtuple
 from datetime import datetime, timedelta
-from . import AMAZON_JOBS_CONFIG as CFG, AMAZON_JOBS_DIR as CWD
+from . import AMAZON_JOBS_CONFIG as CFG
 from ..alert import Pushover
 from ..browser import Browser
-from ..data import pickle_dict_load, pickle_dict_dump
 
 # CONSTANTS
 
