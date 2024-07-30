@@ -92,7 +92,7 @@ class Browser:
             self.wait_until_stale(submit)
             self.jitter()
             self.move_pointer_to_element(submit)
-        except TimeoutError:
+        except TimeoutException:
             return
         
         # wait until gone...
