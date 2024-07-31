@@ -1,12 +1,12 @@
+from datetime import timedelta
 import re
 from string import Template
 from selenium.common.exceptions import NoSuchElementException
-
 from . import AMAZON_JOBS_CONFIG as CFG
+from .database import insert_job_item, job_item_cached
 from .structures import JobItem, JobLocation, JobPosition
 from ..alert import Pushover
 from ..browser import Browser
-
 
 AMAZON_JOBS_URL = Template(
     'https://hiring.amazon.com/app#/jobSearch?'
@@ -84,9 +84,12 @@ with Browser() as wb:
                 print('Error parsing text data')
                 continue
 
-            # We cache
+            job = JobItem(position, location)
 
-            jobs.append(JobItem(position, location))
+            # We cache
+            if not job_item_cached(job): # else log?
+                insert_job_item(job)
+                jobs.append(job)
 
         wb.jitter(3, 5)
 
