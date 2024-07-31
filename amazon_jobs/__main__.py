@@ -1,4 +1,5 @@
 import re
+from datetime import timedelta
 from string import Template
 from selenium.common.exceptions import NoSuchElementException
 
@@ -84,12 +85,11 @@ with Browser() as wb:
                 print('Error parsing text data')
                 continue
 
-            job = JobItem(position, location)
+            cur = JobItem(position, location)
 
-            # We cache
-            if not job_item_cached(job): # else log?
-                insert_job_item(job)
-                jobs.append(job)
+            if not job_item_cached(cur, timedelta(hours=1)):
+                insert_job_item(cur)
+                jobs.append(cur)
 
         wb.jitter(3, 5)
 

@@ -61,7 +61,7 @@ def insert_job_item(item: JobItem):
     ))
     cnx.commit()
 
-def job_item_cached(item: JobItem) -> bool:
+def job_item_cached(item: JobItem, min_age: timedelta) -> bool:
     check_query = '''
         SELECT timestamp 
         FROM jobs 
@@ -82,9 +82,8 @@ def job_item_cached(item: JobItem) -> bool:
     ))
     
     if res := cur.fetchone():
-        return (datetime.now() - res[0]) <= timedelta(days=1)
+        return (datetime.now() - res[0]) <= min_age
     
     return False
-
 
 create_jobs_table()
