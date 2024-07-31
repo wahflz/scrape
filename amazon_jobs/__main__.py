@@ -1,7 +1,7 @@
-from datetime import timedelta
 import re
 from string import Template
 from selenium.common.exceptions import NoSuchElementException
+
 from . import AMAZON_JOBS_CONFIG as CFG
 from .database import insert_job_item, job_item_cached
 from .structures import JobItem, JobLocation, JobPosition
