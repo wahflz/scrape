@@ -33,7 +33,9 @@ def parse_job_position(text: str) -> JobPosition:
             code = 'FC'
         case 'Delivery Station Warehouse Associate':
             code = 'DS'
-        case 'Delivery Center Associate':
+        case 'Sortation Center Warehouse Associate':
+            code = 'SC'
+        case 'Distribution Center Associate':
             code = 'DC'
         case 'Locker+ Customer Service Associate':
             code = 'L+'
