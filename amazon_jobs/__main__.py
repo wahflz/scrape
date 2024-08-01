@@ -103,7 +103,7 @@ with Browser() as wb:
                     f'{job_item.position.code} @ '
                     f'{job_item.location.city}, '
                     f'{job_item.location.state} '
-                    'is cached, skipping...\n'
+                    'is cached, skipping...'
                 ))
 
         wb.jitter(3, 5)
