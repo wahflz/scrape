@@ -1,4 +1,5 @@
 import pathlib
+import logging
 from .. import load_yaml_config
 
 # CONSTANTS
@@ -17,3 +18,6 @@ if 'zips' not in AMAZON_JOBS_CONFIG['amazon']:
 
 # if all(k not in AMAZON_JOBS_CONFIG['amazon'] for k in ('distance', 'cities')):
 #     raise RuntimeError('Amazon configuration requires search criteria')   
+
+logger = logging.getLogger('Amazon_Jobs')
+logger.setLevel(logging.INFO)

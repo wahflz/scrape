@@ -49,7 +49,6 @@ def insert_job_item(item: JobItem):
         ) 
         VALUES (?, ?, ?, ?, ?, ?, ?)
     '''
-
     cur.execute(query, (
         item.position.name, 
         item.position.shifts, 

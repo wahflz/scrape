@@ -3,6 +3,7 @@ from datetime import timedelta
 from string import Template
 from selenium.common.exceptions import NoSuchElementException
 
+from . import logger
 from . import AMAZON_JOBS_CONFIG as CFG
 from .database import insert_job_item, job_item_cached
 from .structures import JobItem, JobLocation, JobPosition
@@ -75,21 +76,35 @@ with Browser() as wb:
                 position_text = wb.find_child_by_xpath(item, './div/div/div[2]/div[1]').text
                 location_text = wb.find_child_by_xpath(item, './div/div/div[2]/div[last()]').text
             except NoSuchElementException:
-                print('Error locating web elements')
+                logger.error((
+                    'Could not locate job description web elements!\n\n'
+                    f'HTML:\n{item.get_attribute("outerHTML")}'
+                ))
                 continue
             
             try:
                 position = parse_job_position(position_text)
                 location = parse_job_location(location_text)
             except ValueError:
-                print('Error parsing text data')
+                logger.error((
+                    'Could not parse job information from text!\n\n'
+                    f'Position:\n{position_text}\n\n'
+                    f'Location:\n{location_text}'
+                ))
                 continue
 
-            cur = JobItem(position, location)
+            job_item = JobItem(position, location)
 
-            if not job_item_cached(cur, timedelta(hours=1)):
-                insert_job_item(cur)
-                jobs.append(cur)
+            if not job_item_cached(job_item, timedelta(hours=1)):
+                insert_job_item(job_item)
+                jobs.append(job_item)
+            else:
+                logger.info((
+                    f'{job_item.position.code} @ '
+                    f'{job_item.location.city}, '
+                    f'{job_item.location.state} '
+                    'is cached, skipping...\n'
+                ))
 
         wb.jitter(3, 5)
 
@@ -98,7 +113,11 @@ with Browser() as wb:
 
     content = ''
     for j in jobs:
-        content += f"✅ {j.position.code} @ {j.location.city}, {j.location.state}\n"
+        content += (
+            f'✅ {j.position.code} @ '
+            f'{j.location.city}, '
+            f'{j.location.state}\n'
+        )
 
     with Pushover(CFG['pushover']['api_key'], CFG['pushover']['user_key']) as p:
         p.message(content)
