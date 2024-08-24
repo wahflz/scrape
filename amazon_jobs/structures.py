@@ -16,4 +16,3 @@ class JobLocation:
 class JobItem:
     position: JobPosition
     location: JobLocation
-    

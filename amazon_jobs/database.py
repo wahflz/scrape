@@ -35,54 +35,54 @@ def create_jobs_table():
 
     cur.execute(query)
     cnx.commit()
-    
+
 def insert_job_item(item: JobItem):
     query = '''
         INSERT INTO jobs (
-            position_name, 
-            position_shifts, 
-            position_code, 
-            location_city, 
-            location_state, 
-            location_distance, 
+            position_name,
+            position_shifts,
+            position_code,
+            location_city,
+            location_state,
+            location_distance,
             timestamp
-        ) 
+        )
         VALUES (?, ?, ?, ?, ?, ?, ?)
     '''
     cur.execute(query, (
-        item.position.name, 
-        item.position.shifts, 
-        item.position.code, 
-        item.location.city, 
-        item.location.state, 
-        item.location.distance, 
+        item.position.name,
+        item.position.shifts,
+        item.position.code,
+        item.location.city,
+        item.location.state,
+        item.location.distance,
         datetime.now()
     ))
     cnx.commit()
 
 def job_item_cached(item: JobItem, min_age: timedelta) -> bool:
     check_query = '''
-        SELECT timestamp 
-        FROM jobs 
-        WHERE position_name = ? 
-          AND position_code = ? 
-          AND location_city = ? 
-          AND location_state = ? 
-          AND location_distance = ? 
-        ORDER BY timestamp DESC 
+        SELECT timestamp
+        FROM jobs
+        WHERE position_name = ?
+          AND position_code = ?
+          AND location_city = ?
+          AND location_state = ?
+          AND location_distance = ?
+        ORDER BY timestamp DESC
         LIMIT 1
     '''
     cur.execute(check_query, (
-        item.position.name, 
-        item.position.code, 
-        item.location.city, 
-        item.location.state, 
+        item.position.name,
+        item.position.code,
+        item.location.city,
+        item.location.state,
         item.location.distance
     ))
-    
+
     if res := cur.fetchone():
         return (datetime.now() - res[0]) <= min_age
-    
+
     return False
 
 create_jobs_table()

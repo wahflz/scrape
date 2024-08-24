@@ -43,7 +43,7 @@ def parse_job_position(text: str) -> JobPosition:
             code = '??'
 
     return JobPosition(name, int(match.group('shifts') or 0), code)
-    
+
 def parse_job_location(text: str) -> JobLocation:
     pattern = (
         r'(?:Within (?P<distance>[0-9\.]+) mi \|)?\s?'
@@ -53,7 +53,7 @@ def parse_job_location(text: str) -> JobLocation:
 
     if not match:
         raise ValueError('Could not parse job location')
-    
+
     return JobLocation(
         match.group('city'),
         match.group('state'),
@@ -83,7 +83,7 @@ with Browser() as wb:
                     f'HTML:\n{item.get_attribute("outerHTML")}'
                 ))
                 continue
-            
+
             try:
                 position = parse_job_position(position_text)
                 location = parse_job_location(location_text)
