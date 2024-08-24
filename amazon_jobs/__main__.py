@@ -39,6 +39,10 @@ def parse_job_position(text: str) -> JobPosition:
             code = 'DC'
         case 'Locker+ Customer Service Associate':
             code = 'L+'
+        case 'XL Warehouse Associate':
+            code = 'XL'
+        case 'Grocery Warehouse Associate':
+            code = 'GW'
         case _:
             code = '??'
 
