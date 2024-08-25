@@ -78,7 +78,7 @@ def is_filtered(job: JobItem) -> bool:
         if (
             (city == '*' or city.casefold() == job.location.city.casefold()) and
             (state == '*' or state.casefold() == job.location.state.casefold()) and
-            (code == '*' or code.casefold() == job.position.code)
+            (code == '*' or code.casefold() == job.position.code.casefold())
         ):
             return False
 
