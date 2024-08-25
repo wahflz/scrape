@@ -16,6 +16,8 @@ AMAZON_JOBS_URL = Template(
     '&locale=en-US'
 )
 
+AMAZON_JOBS_FILTERS = CFG.get('filters', [])
+
 def parse_job_position(text: str) -> JobPosition:
     pattern = (
         r'^(?P<name>[^\n]+)'
@@ -64,11 +66,11 @@ def parse_job_location(text: str) -> JobLocation:
         float(match.group('distance') or 0.0)
     )
 
-def is_filtered(filters: list[dict], location: JobLocation) -> bool:
-    if not filters:
+def is_filtered(location: JobLocation) -> bool:
+    if not AMAZON_JOBS_FILTERS:
         return False
 
-    for i in filters:
+    for i in AMAZON_JOBS_FILTERS:
         city = i.get('city', None)
         state = i.get('state', None)
 
@@ -117,6 +119,9 @@ with Browser() as wb:
 
             job_item = JobItem(position, location)
 
+            if is_filtered(job_item.location):
+                continue
+
             if not job_item_cached(job_item, timedelta(hours=1)):
                 insert_job_item(job_item)
                 jobs.append(job_item)
@@ -130,17 +135,10 @@ with Browser() as wb:
 
         wb.jitter(3, 5)
 
-    if not jobs:
-        exit()
-
-    if 'pushover' in CFG:
+    if jobs and 'pushover' in CFG:
         content = ''
-        filters = CFG.get('filters', [])
 
         for j in jobs:
-            if is_filtered(filters, j.location):
-                continue
-
             content += (
                 f'✅ {j.position.code} @ '
                 f'{j.location.city}, '
