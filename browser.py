@@ -12,7 +12,7 @@ from typing import Literal, Optional
 
 from . import APP_BIN
 
-type BySelector = Literal['xpath', 'css selector', 'class name']
+BySelector = Literal['xpath', 'css selector', 'class name']
 
 class Browser:
     def __init__(self, headless: bool = True) -> None:
