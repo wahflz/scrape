@@ -10,7 +10,7 @@ SQLITE_DATABASE = path.join(AMAZON_JOBS_DIR, 'database.db')
 def adapt_datetime(dt: datetime) -> str:
     return dt.isoformat()
 
-def convert_datetime(ts: str) -> datetime:
+def convert_datetime(ts: bytes) -> datetime:
     return datetime.fromisoformat(ts.decode('utf-8'))
 
 sqlite3.register_adapter(datetime, adapt_datetime)
