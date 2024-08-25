@@ -64,6 +64,22 @@ def parse_job_location(text: str) -> JobLocation:
         float(match.group('distance') or 0.0)
     )
 
+def is_filtered(filters: list[dict], location: JobLocation) -> bool:
+    if not filters:
+        return False
+
+    for i in filters:
+        city = i.get('city', None)
+        state = i.get('state', None)
+
+        if (
+            (city == '*' or city.casefold() == location.city.casefold()) and
+            (state == '*' or state.casefold() == location.state.casefold())
+        ):
+            return False
+
+    return True
+
 jobs = []
 
 with Browser() as wb:
@@ -117,13 +133,19 @@ with Browser() as wb:
     if not jobs:
         exit()
 
-    content = ''
-    for j in jobs:
-        content += (
-            f'✅ {j.position.code} @ '
-            f'{j.location.city}, '
-            f'{j.location.state}\n'
-        )
+    if 'pushover' in CFG:
+        content = ''
+        filters = CFG.get('filters', [])
 
-    with Pushover(CFG['pushover']['api_key'], CFG['pushover']['user_key']) as p:
-        p.message(content)
+        for j in jobs:
+            if is_filtered(filters, j.location):
+                continue
+
+            content += (
+                f'✅ {j.position.code} @ '
+                f'{j.location.city}, '
+                f'{j.location.state}\n'
+            )
+
+        with Pushover(CFG['pushover']['api_key'], CFG['pushover']['user_key']) as p:
+            p.message(content)
