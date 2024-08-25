@@ -1,7 +1,6 @@
 import yaml
 import shutil
 import pathlib
-import platform
 
 # CONSTANTS
 
