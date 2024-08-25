@@ -1,4 +1,4 @@
-import urllib
+import urllib.parse
 import http.client
 from . import APP_DIR
 
@@ -33,6 +33,6 @@ if __name__ == '__main__':
     from . import load_yaml_config
 
     config = load_yaml_config(APP_DIR / 'config.yml')
-    
+
     with Pushover(config['pushover']['api_key'], config['pushover']['user_key']) as p:
         p.message('This is a test!')
