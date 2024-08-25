@@ -66,17 +66,19 @@ def parse_job_location(text: str) -> JobLocation:
         float(match.group('distance') or 0.0)
     )
 
-def is_filtered(location: JobLocation) -> bool:
+def is_filtered(job: JobItem) -> bool:
     if not AMAZON_JOBS_FILTERS:
         return False
 
     for i in AMAZON_JOBS_FILTERS:
-        city = i.get('city', None)
-        state = i.get('state', None)
+        city = i.get('city', '*')
+        state = i.get('state', '*')
+        code = i.get('code', '*')
 
         if (
-            (city == '*' or city.casefold() == location.city.casefold()) and
-            (state == '*' or state.casefold() == location.state.casefold())
+            (city == '*' or city.casefold() == job.location.city.casefold()) and
+            (state == '*' or state.casefold() == job.location.state.casefold()) and
+            (code == '*' or code.casefold() == job.position.code)
         ):
             return False
 
@@ -119,7 +121,7 @@ with Browser() as wb:
 
             job_item = JobItem(position, location)
 
-            if is_filtered(job_item.location):
+            if is_filtered(job_item):
                 continue
 
             if not job_item_cached(job_item, timedelta(hours=1)):
