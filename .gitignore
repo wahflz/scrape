@@ -158,3 +158,5 @@ config.yml
 *.pkl
 .vscode
 *.db
+
+bin/
